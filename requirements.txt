@@ -1,0 +1,21 @@
+# Core dependencies for FireSat-AI (pipeline, model, API, dashboard backend).
+# Tested against Python 3.12 / torch 2.6 (CPU). For GPU training, install the
+# CUDA build of torch separately per https://pytorch.org/get-started/locally/
+numpy>=1.24,<3
+pandas>=2.0
+torch>=2.0
+scipy>=1.10
+scikit-learn>=1.2
+shapely>=2.0
+matplotlib>=3.7
+fastapi>=0.100
+uvicorn[standard]>=0.23
+pydantic>=2.0
+httpx>=0.24
+pyarrow>=14.0
+
+# Optional: only needed for LIVE satellite/weather acquisition (see
+# src/firesat/data/gee_client.py and era5.py). Not required to run the
+# synthetic pipeline, model, API, or dashboard.
+# earthengine-api>=0.1.380
+# cdsapi>=0.6

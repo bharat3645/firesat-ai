@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "firesat-ai"
+version = "0.1.0"
+description = "Hybrid CNN-LSTM + attention wildfire risk forecasting for Alaska, fusing Sentinel-1/2, Landsat/MODIS/VIIRS, and ERA5 reanalysis data."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "bharat3645" }]
+keywords = ["wildfire", "remote-sensing", "earth-observation", "deep-learning", "alaska", "gis"]
+
+dependencies = [
+    "numpy>=1.24,<3",
+    "pandas>=2.0",
+    "torch>=2.0",
+    "scipy>=1.10",
+    "scikit-learn>=1.2",
+    "shapely>=2.0",
+    "matplotlib>=3.7",
+    "fastapi>=0.100",
+    "uvicorn[standard]>=0.23",
+    "pydantic>=2.0",
+    "httpx>=0.24",
+    "pyarrow>=14.0",
+]
+
+[project.optional-dependencies]
+geo = [
+    "earthengine-api>=0.1.380",
+    "cdsapi>=0.6",
+]
+dev = [
+    "pytest>=7.4",
+    "pytest-cov>=4.1",
+    "ruff>=0.4",
+    "httpx>=0.24",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 110
+src = ["src", "tests", "scripts"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+ignore = ["E501"]

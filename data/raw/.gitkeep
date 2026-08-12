@@ -1,0 +1,3 @@
+Place downloaded raw acquisitions here (e.g. cached FIRMS CSVs, AK Fire
+Service perimeter shapefiles/GeoJSON, GEE export tiles) when running the
+live pipeline. This directory is gitignored except for this file.

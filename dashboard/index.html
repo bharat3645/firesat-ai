@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FireSat-AI &mdash; Alaska Wildfire Risk Dashboard</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔥</text></svg>" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-icon">&#128293;</span>
+      <div>
+        <h1>FireSat-AI</h1>
+        <p>Alaska wildfire risk forecasting &mdash; satellite imagery + reanalysis weather, hybrid CNN-LSTM + attention</p>
+      </div>
+    </div>
+    <div id="health-badge" class="health-badge">checking backend&hellip;</div>
+  </header>
+
+  <main class="layout">
+    <section class="map-pane">
+      <div id="map"></div>
+      <div class="horizon-toggle" id="horizon-toggle">
+        <span class="horizon-label">Map colored by risk at:</span>
+        <button data-horizon="horizon_1m" class="active">1 month</button>
+        <button data-horizon="horizon_3m">3 months</button>
+        <button data-horizon="horizon_6m">6 months</button>
+      </div>
+      <div class="legend">
+        <span><i class="swatch risk-0"></i>No Risk</span>
+        <span><i class="swatch risk-1"></i>Moderate</span>
+        <span><i class="swatch risk-2"></i>High</span>
+      </div>
+    </section>
+
+    <aside class="side-pane" id="side-pane">
+      <div id="region-picker" class="region-picker"></div>
+
+      <div id="risk-summary" class="card">
+        <h2>Current risk</h2>
+        <div id="risk-summary-body">Select a region on the map.</div>
+      </div>
+
+      <div class="card">
+        <h2>Risk by horizon</h2>
+        <div id="horizon-bars"></div>
+      </div>
+
+      <div class="card">
+        <h2>Historical trend</h2>
+        <p class="card-sub">Predicted risk class over the trailing lookback window</p>
+        <div id="trend-chart"></div>
+      </div>
+
+      <div class="card">
+        <h2>Model interpretability</h2>
+        <p class="card-sub">Attention weights &mdash; which inputs and months drove this prediction</p>
+        <h3>Spatial channel attention</h3>
+        <div id="channel-attention"></div>
+        <h3>Temporal attention (top months)</h3>
+        <div id="temporal-attention"></div>
+      </div>
+
+      <div class="card">
+        <h2>Historical fire events (synthetic backtest)</h2>
+        <p class="card-sub" id="fire-history-sub"></p>
+        <div id="fire-history"></div>
+      </div>
+
+      <div class="card scope-note">
+        <h2>Scope &amp; honesty note</h2>
+        <p>
+          This MVP ships with a physically-motivated <strong>synthetic</strong> data generator so the full
+          pipeline runs without live credentials. Swap in Google Earth Engine / ERA5 / NASA FIRMS /
+          Alaska Fire Service data (clients included, see <code>src/firesat/data/</code>) for a live
+          deployment. Scoped to two well-studied regions rather than all of Alaska. See
+          <code>docs/evaluation_report.md</code> for metrics and limitations.
+        </p>
+      </div>
+    </aside>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Lint (ruff)
+        run: ruff check src tests scripts
+
+      - name: Run test suite
+        run: pytest -q --cov=firesat --cov-report=term-missing
+
+  pipeline-smoke-test:
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+
+      - name: Regenerate a small synthetic dataset (smoke test, isolated dir)
+        run: |
+          python scripts/generate_demo_data.py --start-year 2022 --end-year 2023 \
+            --seed 123 --out-dir /tmp/firesat_smoke_data
+
+      - name: Train for one epoch (smoke test, isolated checkpoint)
+        run: |
+          python scripts/train_demo.py --data-dir /tmp/firesat_smoke_data \
+            --checkpoint /tmp/firesat_smoke_model.pt --epochs 1 --batch-size 8 \
+            --metrics-out /tmp/firesat_smoke_metrics.json
+
+      - name: Verify API boots against the smoke-tested checkpoint
+        run: |
+          python - <<'PY'
+          from fastapi.testclient import TestClient
+          from firesat.inference import InferenceService, get_inference_service
+          from firesat.api.main import app
+
+          service = InferenceService(
+              checkpoint_path="/tmp/firesat_smoke_model.pt",
+              data_dir="/tmp/firesat_smoke_data",
+          )
+          service.load()
+          assert service.ready, service.status_message
+          app.dependency_overrides[get_inference_service] = lambda: service
+
+          with TestClient(app) as client:
+              health = client.get("/api/health").json()
+              assert health["ready"] is True, health
+              regions = client.get("/api/regions").json()
+              for region in regions:
+                  r = client.get(f"/api/risk/{region['id']}")
+                  assert r.status_code == 200, r.text
+          print("Smoke test OK:", health)
+          PY

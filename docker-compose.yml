@@ -1,0 +1,19 @@
+services:
+  firesat-api:
+    build: .
+    image: firesat-ai:local
+    ports:
+      - "8000:8000"
+    environment:
+      - FIRESAT_SEED=42
+    volumes:
+      # Mount host copies so regenerated/retrained artifacts persist across
+      # container rebuilds without baking them into the image every time.
+      - ./data/processed:/app/data/processed
+      - ./models/checkpoints:/app/models/checkpoints
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8000/api/health').raise_for_status()"]
+      interval: 30s
+      timeout: 5s
+      start_period: 15s
+      retries: 3

@@ -1,0 +1,56 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+*.egg
+
+# --- Virtual environments ---
+.venv/
+venv/
+env/
+ENV/
+
+# --- Testing / linting ---
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+
+# --- Environment / secrets ---
+.env
+.env.*
+!.env.example
+*.cdsapirc
+.credentials/
+
+# --- Data (regenerate via scripts/generate_demo_data.py) ---
+data/raw/*
+!data/raw/.gitkeep
+
+# Note: data/processed/ (small synthetic demo dataset) and
+# models/checkpoints/ (trained demo weights) ARE intentionally committed so
+# the API/dashboard work out of the box. Large real acquisitions should NOT
+# be committed -- redirect them to data/raw/ or an external store instead.
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# --- Docker ---
+*.pid
+
+# --- Node (dashboard tooling, if ever added) ---
+node_modules/
