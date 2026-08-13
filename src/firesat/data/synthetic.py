@@ -27,8 +27,8 @@ from firesat.config import (
     HORIZONS_MONTHS,
     N_HORIZONS,
     RANDOM_SEED,
-    Region,
     SPATIAL_FEATURE_CHANNELS,
+    Region,
 )
 
 try:

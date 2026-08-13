@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from firesat.training.evaluate import evaluate_model
-from firesat.training.dataset import build_concat_dataset
-from firesat.training.train import TrainConfig, load_checkpoint, train_firesat_model
 from firesat.features.build_features import NormalizationStats
+from firesat.training.dataset import build_concat_dataset
+from firesat.training.evaluate import evaluate_model
+from firesat.training.train import TrainConfig, load_checkpoint, train_firesat_model
 
 SEQ_LEN = 6
 

@@ -41,9 +41,11 @@ def ndmi(nir: np.ndarray, swir1: np.ndarray) -> np.ndarray:
     return (nir - swir1) / (nir + swir1 + _EPS)
 
 
-def evi(nir: np.ndarray, red: np.ndarray, blue: np.ndarray, g: float = 2.5, c1: float = 6.0, c2: float = 7.5, l: float = 1.0) -> np.ndarray:
+def evi(
+    nir: np.ndarray, red: np.ndarray, blue: np.ndarray, g: float = 2.5, c1: float = 6.0, c2: float = 7.5, canopy_bg: float = 1.0
+) -> np.ndarray:
     """Enhanced Vegetation Index -- less saturating than NDVI in dense canopy."""
     nir = np.asarray(nir, dtype=np.float64)
     red = np.asarray(red, dtype=np.float64)
     blue = np.asarray(blue, dtype=np.float64)
-    return g * (nir - red) / (nir + c1 * red - c2 * blue + l + _EPS)
+    return g * (nir - red) / (nir + c1 * red - c2 * blue + canopy_bg + _EPS)

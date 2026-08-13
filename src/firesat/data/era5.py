@@ -20,7 +20,7 @@ from dataclasses import dataclass
 import numpy as np
 import pandas as pd
 
-from firesat.config import ERA5_COLLECTION, Region, WEATHER_FEATURE_COLUMNS
+from firesat.config import ERA5_COLLECTION, WEATHER_FEATURE_COLUMNS, Region
 
 logger = logging.getLogger(__name__)
 

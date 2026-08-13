@@ -19,10 +19,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from firesat.config import PROCESSED_DATA_DIR  # noqa: E402
 from firesat.data.pipeline import load_all_processed_regions  # noqa: E402
-from firesat.training.evaluate import evaluate_model, metrics_to_dict  # noqa: E402
-from firesat.training.dataset import build_concat_dataset  # noqa: E402
-from firesat.training.train import DEFAULT_CHECKPOINT_PATH, TrainConfig, train_firesat_model  # noqa: E402
 from firesat.features.build_features import NormalizationStats  # noqa: E402
+from firesat.training.dataset import build_concat_dataset  # noqa: E402
+from firesat.training.evaluate import evaluate_model, metrics_to_dict  # noqa: E402
+from firesat.training.train import DEFAULT_CHECKPOINT_PATH, TrainConfig, train_firesat_model  # noqa: E402
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 logger = logging.getLogger(__name__)

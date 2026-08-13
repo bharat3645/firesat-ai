@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [master]
   pull_request:
-    branches: [main]
+    branches: [master]
   workflow_dispatch:
 
 jobs:
@@ -50,9 +50,18 @@ jobs:
           python -m pip install --upgrade pip
           pip install -e .
 
+      # A 2022-2023 (24 month) range used to be passed here, but the model's
+      # 24-month lookback (SEQUENCE_LENGTH) plus its longest forecast
+      # horizon (6 months, HORIZONS_MONTHS) together need at least 30
+      # months of history before a single training anchor has fully-observed
+      # labels - with exactly 24 months there are zero valid anchors in
+      # *either* split, so `train_demo.py` below failed with "num_samples
+      # should be a positive integer value, but got num_samples=0" before
+      # any training ever ran. 5 years gives every horizon comfortable
+      # headroom in both the train and validation splits.
       - name: Regenerate a small synthetic dataset (smoke test, isolated dir)
         run: |
-          python scripts/generate_demo_data.py --start-year 2022 --end-year 2023 \
+          python scripts/generate_demo_data.py --start-year 2022 --end-year 2026 \
             --seed 123 --out-dir /tmp/firesat_smoke_data
 
       - name: Train for one epoch (smoke test, isolated checkpoint)
